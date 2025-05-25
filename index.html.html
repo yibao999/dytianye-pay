@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>星云驱动 · 抖音充值引导页</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <style>
+    body {
+      background-color: #f9fbff;
+      color: #333;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 { color: #2c3e50; }
+    p { font-size: 18px; color: #34495e; }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #ff2c55;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #e01b45; }
+    .copied {
+      color: green;
+      font-size: 14px;
+      display: none;
+      margin-top: 10px;
+    }
+    .retry {
+      margin-top: 20px;
+      color: #e74c3c;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>星云驱动 · 抖音钻石充值</h1>
+  <p>复制账号 → 跳转充值页 → 粘贴账号 → 选金额</p>
+
+  <h2>当前充值账号</h2>
+  <p id="dyAccount"></p>
+  <button onclick="copyAccount()">📋 一键复制账号</button>
+  <div class="copied" id="copyStatus">✅ 已复制成功！</div>
+
+  <h2>跳转充值页面</h2>
+  <button onclick="goToDouyin()">🚀 跳转抖音充值</button>
+
+  <div class="retry" id="retryNotice" style="display:none;">
+    ⚠️ 若充值失败，请返回页面，尝试较低金额重试。
+  </div>
+
+  <script>
+    // 账号池
+    const accounts = [
+      "97930744122",
+      "12233445566",
+      "88899900011",
+      "17654321098",
+      "19988776655"
+    ];
+    // 随机选择一个
+    const selectedAccount = accounts[Math.floor(Math.random() * accounts.length)];
+    document.getElementById("dyAccount").textContent = selectedAccount;
+
+    function copyAccount() {
+      const ta = document.createElement("textarea");
+      ta.value = selectedAccount;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        document.getElementById("copyStatus").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("copyStatus").style.display = "none";
+          goToDouyin();
+        }, 800);
+      } catch {
+        alert("复制失败，请手动复制");
+      }
+      document.body.removeChild(ta);
+    }
+
+    function goToDouyin() {
+      const isMobile = /iPhone|iPad|iPod|Android|Mobile/i.test(navigator.userAgent);
+      if (isMobile) {
+        // 唤起抖音 App 并打开充值页
+        window.location.href = "snssdk1128://webview?url=https://www.douyin.com/pay";
+        setTimeout(() => {
+          document.getElementById("retryNotice").style.display = "block";
+        }, 8000);
+      } else {
+        alert("请使用手机浏览器打开本页面，以跳转抖音App完成充值");
+      }
+    }
+  </script>
+</body>
+</html>
